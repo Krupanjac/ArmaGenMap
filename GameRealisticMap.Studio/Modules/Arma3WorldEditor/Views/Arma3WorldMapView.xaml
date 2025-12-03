@@ -109,6 +109,26 @@
             <Image Source="pack://application:,,,/GameRealisticMap.Studio;component/Resources/Tools/center.png" Height="20" />
             <TextBox Text="{Binding ViewCenter, Source={x:Reference GrmMap}, Converter={StaticResource TerrainPointStringConverter}, Mode=TwoWay}" Width="100" Margin="4" Keyboard.KeyDown="TextBox_KeyDown" TextAlignment="Center" />
 
+            <Rectangle Width="2" Margin="7 0" Fill="{x:Static SystemColors.ActiveBorderBrush}" />
+            <ToggleButton IsChecked="{Binding SelectRoads}" Style="{StaticResource ToolBarToggleButtonStyleBase}" Padding="5 0" Margin="2 0" ToolTip="Select Roads">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/GameRealisticMap.Studio;component/Resources/Tools/road.png" Height="16" />
+                    <TextBlock VerticalAlignment="Center" Margin="5" >Roads</TextBlock>
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding SelectNature}" Style="{StaticResource ToolBarToggleButtonStyleBase}" Padding="5 0" Margin="2 0" ToolTip="Select Nature (Trees, Bushes)">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/GameRealisticMap.Studio;component/Resources/Icons/Tree.png" Height="16" />
+                    <TextBlock VerticalAlignment="Center" Margin="5" >Nature</TextBlock>
+                </StackPanel>
+            </ToggleButton>
+            <ToggleButton IsChecked="{Binding SelectObjects}" Style="{StaticResource ToolBarToggleButtonStyleBase}" Padding="5 0" Margin="2 0" ToolTip="Select Objects">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="pack://application:,,,/GameRealisticMap.Studio;component/Resources/Icons/Objects.png" Height="16" />
+                    <TextBlock VerticalAlignment="Center" Margin="5" >Objects</TextBlock>
+                </StackPanel>
+            </ToggleButton>
+
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="5"  Grid.Column="1">
             <Button Padding="5 0" cal:Message.Attach="TakeAerialImages">
@@ -121,7 +141,8 @@
 
                 <grm:GrmMapHugeImageLayer Image="{Binding BackgroundImage}"  Resolution="{Binding BackgroundResolution}" Opacity="0.8" IsHitTestVisible="False" />
 
-                <grm:GrmMapArma3 x:Name="A3Layer" Roads="{Binding Roads}" Objects="{Binding Objects}" SelectItem="{Binding SelectItemCommand}" AddToSelectionCommand="{Binding AddToSelectionCommand}" SelectItemsCommand="{Binding SelectItemsCommand}" />
+                <grm:GrmMapArma3 x:Name="A3Layer" Roads="{Binding Roads}" Objects="{Binding Objects}" SelectItem="{Binding SelectItemCommand}" AddToSelectionCommand="{Binding AddToSelectionCommand}" SelectItemsCommand="{Binding SelectItemsCommand}"
+                                 SelectRoads="{Binding SelectRoads}" SelectNature="{Binding SelectNature}" SelectObjects="{Binding SelectObjects}" />
 
                 <grm:GrmMapEditLayer.SelectionContextMenu>
                     <ContextMenu>

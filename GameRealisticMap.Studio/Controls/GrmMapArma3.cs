@@ -43,6 +43,33 @@ namespace GameRealisticMap.Studio.Controls
             set { SetValue(SelectItemsCommandProperty, value); }
         }
 
+        public static readonly DependencyProperty SelectRoadsProperty =
+            DependencyProperty.Register(nameof(SelectRoads), typeof(bool), typeof(GrmMapArma3), new PropertyMetadata(true));
+
+        public bool SelectRoads
+        {
+            get { return (bool)GetValue(SelectRoadsProperty); }
+            set { SetValue(SelectRoadsProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectNatureProperty =
+            DependencyProperty.Register(nameof(SelectNature), typeof(bool), typeof(GrmMapArma3), new PropertyMetadata(true));
+
+        public bool SelectNature
+        {
+            get { return (bool)GetValue(SelectNatureProperty); }
+            set { SetValue(SelectNatureProperty, value); }
+        }
+
+        public static readonly DependencyProperty SelectObjectsProperty =
+            DependencyProperty.Register(nameof(SelectObjects), typeof(bool), typeof(GrmMapArma3), new PropertyMetadata(true));
+
+        public bool SelectObjects
+        {
+            get { return (bool)GetValue(SelectObjectsProperty); }
+            set { SetValue(SelectObjectsProperty, value); }
+        }
+
         public Dictionary<EditableArma3RoadTypeInfos, Pen> RoadBrushes { get; } = new();
 
         public EditableArma3Roads? Roads
@@ -189,16 +216,16 @@ namespace GameRealisticMap.Studio.Controls
                 var selection = new List<object>();
                 var enveloppe = new Envelope(polygon.MinPoint, polygon.MaxPoint);
 
-                if (roads != null)
+                if (roads != null && SelectRoads)
                 {
                     selection.AddRange(roads.Roads
                         .Where(r => !r.IsRemoved && r.Path.EnveloppeIntersects(enveloppe) && r.Path.AsLineString.Intersects(polygon.AsPolygon)));
                 }
 
-                if (objects != null)
+                if (objects != null && (SelectNature || SelectObjects))
                 {
                     selection.AddRange(objects.Search(enveloppe)
-                        .Where(o => !o.IsRemoved && polygon.Contains(o.Center)));
+                        .Where(o => !o.IsRemoved && polygon.Contains(o.Center) && IsSelectedCategory(o.Category)));
                 }
 
                 if (selection.Count > 0)
@@ -206,6 +233,15 @@ namespace GameRealisticMap.Studio.Controls
                     SelectItemsCommand?.Execute(selection);
                 }
             }
+        }
+
+        private bool IsSelectedCategory(AssetCatalogCategory category)
+        {
+            if (category == AssetCatalogCategory.Tree || category == AssetCatalogCategory.Bush)
+            {
+                return SelectNature;
+            }
+            return SelectObjects;
         }
 
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)

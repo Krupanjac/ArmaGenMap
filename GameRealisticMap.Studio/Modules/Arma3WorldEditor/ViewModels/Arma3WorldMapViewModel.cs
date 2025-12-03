@@ -40,12 +40,55 @@ namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
         private readonly Dictionary<EditableWrpObject, TerrainObjectVM> objCache = new Dictionary<EditableWrpObject, TerrainObjectVM>();
         private List<EditableWrpObject>? initialList = null;
 
+        private bool selectRoads = true;
+        private bool selectNature = true;
+        private bool selectObjects = true;
+
         public Arma3WorldMapViewModel(Arma3WorldEditorViewModel parent, IArma3DataModule arma3Data)
         {
             this.parentEditor = parent;
             this.arma3Data = arma3Data;
             this.inspectorTool = IoC.Get<IInspectorTool>();
             DisplayName = parent.DisplayName + " - Editor";
+        }
+
+        public bool SelectRoads
+        {
+            get { return selectRoads; }
+            set
+            {
+                if (selectRoads != value)
+                {
+                    selectRoads = value;
+                    NotifyOfPropertyChange();
+                }
+            }
+        }
+
+        public bool SelectNature
+        {
+            get { return selectNature; }
+            set
+            {
+                if (selectNature != value)
+                {
+                    selectNature = value;
+                    NotifyOfPropertyChange();
+                }
+            }
+        }
+
+        public bool SelectObjects
+        {
+            get { return selectObjects; }
+            set
+            {
+                if (selectObjects != value)
+                {
+                    selectObjects = value;
+                    NotifyOfPropertyChange();
+                }
+            }
         }
 
         public bool CanMerge => selectedItems != null 
