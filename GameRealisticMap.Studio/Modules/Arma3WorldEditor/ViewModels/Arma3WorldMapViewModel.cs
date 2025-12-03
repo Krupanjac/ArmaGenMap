@@ -17,6 +17,7 @@ using Gemini.Framework;
 using Gemini.Framework.Commands;
 using Gemini.Modules.Inspector;
 using Gemini.Modules.Shell.Commands;
+using Gemini.Modules.UndoRedo;
 using Pmad.HugeImages;
 using SixLabors.ImageSharp.PixelFormats;
 
@@ -190,11 +191,44 @@ namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
         {
             if (selectedItems != null)
             {
-                foreach (var road in selectedItems.OfType<IEditablePointCollection>())
+                var actions = new List<IUndoableAction>();
+                var others = new List<IEditablePointCollection>();
+
+                foreach (var item in selectedItems.OfType<IEditablePointCollection>())
                 {
-                    road.Remove();
+                    if (item is EditRoadEditablePointCollection road)
+                    {
+                        actions.Add(road.GetRemoveAction());
+                    }
+                    else if (item is TerrainObjectVM obj)
+                    {
+                        actions.Add(obj.GetRemoveAction());
+                    }
+                    else
+                    {
+                        others.Add(item);
+                    }
                 }
+
+                if (actions.Count > 0)
+                {
+                    if (others.Count == 0 && actions.Count == 1)
+                    {
+                        UndoRedoManager.ExecuteAction(actions[0]);
+                    }
+                    else
+                    {
+                        UndoRedoManager.ExecuteAction(new CompositeAction(actions, "Remove Selection"));
+                    }
+                }
+
+                foreach (var other in others)
+                {
+                    other.Remove();
+                }
+
                 SelectedItems = null;
+                EditPoints = null;
             }
             else if (editPoints != null)
             {

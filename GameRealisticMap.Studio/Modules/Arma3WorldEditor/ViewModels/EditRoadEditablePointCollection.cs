@@ -120,6 +120,11 @@ namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
             points.ClearUndoable(Execute);
         }
 
+        public IUndoableAction GetRemoveAction()
+        {
+            return new UndoableFocusWrapper(new ClearObservableCollection<TerrainPoint>(points), EnsureFocus);
+        }
+
         public EditableArma3RoadTypeInfos RoadTypeInfos
         {
             get { return road.RoadTypeInfos; }

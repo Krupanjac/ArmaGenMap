@@ -13,6 +13,7 @@ using GameRealisticMap.Studio.Modules.Arma3Data;
 using GameRealisticMap.Studio.Modules.AssetBrowser.Services;
 using Gemini.Modules.Inspector;
 using Gemini.Modules.Inspector.Inspectors;
+using Gemini.Modules.UndoRedo;
 
 namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
 {
@@ -160,6 +161,11 @@ namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
         public void Remove()
         {
             owner.UndoRedoManager.ExecuteAction(new RemoveObjectAction(owner, this));
+        }
+
+        public IUndoableAction GetRemoveAction()
+        {
+            return new RemoveObjectAction(owner, this);
         }
 
         public void RemoveAt(int index)
