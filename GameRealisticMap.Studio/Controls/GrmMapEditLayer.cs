@@ -468,7 +468,7 @@ namespace GameRealisticMap.Studio.Controls
                     var p4 = map.ViewportCoordinates(selectionRect.BottomLeft);
                     var poly = new TerrainPolygon(new List<TerrainPoint>() { p1, p2, p3, p4, p1 });
 
-                    foreach (var child in InternalChildren.OfType<GrmMapArma3>())
+                    foreach (var child in InternalChildren.OfType<GrmMapArma3>().ToList())
                     {
                         child.SelectItemsIn(poly, Keyboard.Modifiers);
                     }
