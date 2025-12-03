@@ -15,7 +15,7 @@
     </UserControl.Resources>
     <ScrollViewer HorizontalScrollBarVisibility="Hidden" IsTabStop="False">
         <StackPanel Margin="20" Width="{Binding ViewportWidth, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
-            <TextBlock FontSize="30" Margin="0 0 0 10">Game Realistic Map</TextBlock>
+            <TextBlock FontSize="30" Margin="0 0 0 10" Text="Game Realistic Map - Krupanjac Version 1.0"/>
             <TextBlock>
             <Run Text="{x:Static r:Labels.HomeIntro}" />
             <TextBlock FontStyle="Italic" Text="{x:Static r:Labels.HomeIntroLimit}" />

@@ -35,11 +35,15 @@ namespace GameRealisticMap.Studio.Controls
         private readonly GrmMapEditLayerOverlay overlay;
         private IEditablePointCollection? editPoints;
         private bool isPreviewEnd;
+        private Point? selectionStart;
+        private Rect selectionRect;
 
         public GrmMapEditLayer()
         {
             overlay = new GrmMapEditLayerOverlay(this);
         }
+
+        public Rect SelectionRect => selectionRect;
 
         public GrmMapEditMode EditMode
         {
@@ -245,8 +249,13 @@ namespace GameRealisticMap.Studio.Controls
                     OnDoubleClick(parent.ViewportCoordinates(e.GetPosition(parent)), e);
                     return;
                 }
+                if (mode == GrmMapEditMode.None && e.ClickCount == 1)
+                {
+                    selectionStart = e.GetPosition(this);
+                    CaptureMouse();
+                }
             }
-            if (Keyboard.Modifiers == ModifierKeys.None)
+            if (Keyboard.Modifiers == ModifierKeys.None && selectionStart == null)
             {
                 ClearSelection?.Execute(null);
             }
@@ -435,6 +444,43 @@ namespace GameRealisticMap.Studio.Controls
             {
                 overlay.InvalidateVisual();
             }
+            if (selectionStart != null)
+            {
+                var current = e.GetPosition(this);
+                selectionRect = new Rect(selectionStart.Value, current);
+                overlay.InvalidateVisual();
+            }
+        }
+
+        protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+        {
+            if (selectionStart != null)
+            {
+                ReleaseMouseCapture();
+                selectionStart = null;
+
+                var map = ParentMap;
+                if (map != null && selectionRect.Width > 5 && selectionRect.Height > 5)
+                {
+                    var p1 = map.ViewportCoordinates(selectionRect.TopLeft);
+                    var p2 = map.ViewportCoordinates(selectionRect.TopRight);
+                    var p3 = map.ViewportCoordinates(selectionRect.BottomRight);
+                    var p4 = map.ViewportCoordinates(selectionRect.BottomLeft);
+                    var poly = new TerrainPolygon(new List<TerrainPoint>() { p1, p2, p3, p4, p1 });
+
+                    foreach (var child in InternalChildren.OfType<GrmMapArma3>())
+                    {
+                        child.SelectItemsIn(poly, Keyboard.Modifiers);
+                    }
+                }
+                else if (Keyboard.Modifiers == ModifierKeys.None)
+                {
+                    ClearSelection?.Execute(null);
+                }
+                selectionRect = Rect.Empty;
+                overlay.InvalidateVisual();
+            }
+            base.OnMouseLeftButtonUp(e);
         }
 
         public override void OnViewportChanged()

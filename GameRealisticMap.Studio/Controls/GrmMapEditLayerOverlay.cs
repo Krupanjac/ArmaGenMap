@@ -24,6 +24,11 @@ namespace GameRealisticMap.Studio.Controls
             var parentMap = owner.ParentMap;
             if (parentMap != null)
             {
+                if (!owner.SelectionRect.IsEmpty)
+                {
+                    dc.DrawRectangle(null, pen, owner.SelectionRect);
+                }
+
                 var outline = owner.Outline;
                 if (outline != null)
                 {

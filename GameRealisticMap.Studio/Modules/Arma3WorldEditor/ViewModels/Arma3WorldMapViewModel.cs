@@ -104,6 +104,27 @@ namespace GameRealisticMap.Studio.Modules.Arma3WorldEditor.ViewModels
 
         public ICommand AddToSelectionCommand => new RelayCommand(AddToSelection);
 
+        public ICommand SelectItemsCommand => new RelayCommand(SelectItems);
+
+        public void SelectItems(object? itemsObj)
+        {
+            if (itemsObj is IEnumerable<object> items)
+            {
+                var editables = items.Select(GetEditable).Where(e => e != null).Cast<IEditablePointCollection>().ToList();
+                if (editables.Any())
+                {
+                    if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && selectedItems != null)
+                    {
+                        SelectedItems = selectedItems.Concat(editables).Distinct().ToList();
+                    }
+                    else
+                    {
+                        SelectedItems = editables;
+                    }
+                }
+            }
+        }
+
         public ICommand InsertPointCommand => new RelayCommand(p => InsertPoint((TerrainPoint)p));
 
         public ICommand DeleteSelectionCommand => new RelayCommand(_ => DeleteSelection());

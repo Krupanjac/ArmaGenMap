@@ -121,7 +121,7 @@
 
                 <grm:GrmMapHugeImageLayer Image="{Binding BackgroundImage}"  Resolution="{Binding BackgroundResolution}" Opacity="0.8" IsHitTestVisible="False" />
 
-                <grm:GrmMapArma3 x:Name="A3Layer" Roads="{Binding Roads}" Objects="{Binding Objects}" SelectItem="{Binding SelectItemCommand}" AddToSelectionCommand="{Binding AddToSelectionCommand}" />
+                <grm:GrmMapArma3 x:Name="A3Layer" Roads="{Binding Roads}" Objects="{Binding Objects}" SelectItem="{Binding SelectItemCommand}" AddToSelectionCommand="{Binding AddToSelectionCommand}" SelectItemsCommand="{Binding SelectItemsCommand}" />
 
                 <grm:GrmMapEditLayer.SelectionContextMenu>
                     <ContextMenu>

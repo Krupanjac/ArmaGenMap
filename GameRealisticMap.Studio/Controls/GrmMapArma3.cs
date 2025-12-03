@@ -34,6 +34,15 @@ namespace GameRealisticMap.Studio.Controls
             set { SetValue(AddToSelectionCommandProperty, value); }
         }
 
+        public static readonly DependencyProperty SelectItemsCommandProperty =
+            DependencyProperty.Register("SelectItemsCommand", typeof(ICommand), typeof(GrmMapArma3), new PropertyMetadata(null));
+
+        public ICommand? SelectItemsCommand
+        {
+            get { return (ICommand?)GetValue(SelectItemsCommandProperty); }
+            set { SetValue(SelectItemsCommandProperty, value); }
+        }
+
         public Dictionary<EditableArma3RoadTypeInfos, Pen> RoadBrushes { get; } = new();
 
         public EditableArma3Roads? Roads
@@ -168,6 +177,34 @@ namespace GameRealisticMap.Studio.Controls
                 default:
                     dc.DrawRectangle(fill, null, obj.Rectangle);
                     break;
+            }
+        }
+
+        public void SelectItemsIn(TerrainPolygon polygon, ModifierKeys modifiers)
+        {
+            var objects = Objects;
+            var roads = Roads;
+            if (roads != null || objects != null)
+            {
+                var selection = new List<object>();
+                var enveloppe = new Envelope(polygon.MinPoint, polygon.MaxPoint);
+
+                if (roads != null)
+                {
+                    selection.AddRange(roads.Roads
+                        .Where(r => !r.IsRemoved && r.Path.EnveloppeIntersects(enveloppe) && r.Path.AsLineString.Intersects(polygon.AsPolygon)));
+                }
+
+                if (objects != null)
+                {
+                    selection.AddRange(objects.Search(enveloppe)
+                        .Where(o => !o.IsRemoved && polygon.Contains(o.Center)));
+                }
+
+                if (selection.Count > 0)
+                {
+                    SelectItemsCommand?.Execute(selection);
+                }
             }
         }
 
