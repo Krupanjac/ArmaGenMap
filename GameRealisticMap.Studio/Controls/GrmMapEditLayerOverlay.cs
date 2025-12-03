@@ -41,6 +41,20 @@ namespace GameRealisticMap.Studio.Controls
                     {
                         dc.DrawGeometry(null, pen, CreateEditPointGeometry(parentMap, editPoints));
                     }
+                    else
+                    {
+                        var multiEditPoints = owner.MultiEditPoints;
+                        if (multiEditPoints != null)
+                        {
+                            foreach(var collection in multiEditPoints)
+                            {
+                                if (collection.Count > 0)
+                                {
+                                    dc.DrawGeometry(null, pen, CreateEditPointGeometry(parentMap, collection));
+                                }
+                            }
+                        }
+                    }
                 }
 
             }

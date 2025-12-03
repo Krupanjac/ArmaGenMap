@@ -12,15 +12,18 @@ namespace GameRealisticMap.Studio.Controls
         private TerrainPoint initialPoint;
         private readonly GrmMapEditLayer map;
 
-        public GrmMapDraggableSquare(GrmMapEditLayer map, TerrainPoint terrainPoint, int index)
+        public GrmMapDraggableSquare(GrmMapEditLayer map, IEditablePointCollection collection, TerrainPoint terrainPoint, int index)
         {
             this.map = map;
+            this.Collection = collection;
             Width = 12;
             Height = 12;
             TerrainPoint = initialPoint = terrainPoint;
             Focusable = true;
             Index = index;
         }
+
+        public IEditablePointCollection Collection { get; }
 
         public SolidColorBrush Fill { get; set; } = new SolidColorBrush(Colors.White);
 
@@ -32,10 +35,19 @@ namespace GameRealisticMap.Studio.Controls
 
         public int Index {  get; set; }
 
+        public static readonly DependencyProperty IsSelectedProperty =
+            DependencyProperty.Register(nameof(IsSelected), typeof(bool), typeof(GrmMapDraggableSquare), new PropertyMetadata(false, (d, e) => ((GrmMapDraggableSquare)d).InvalidateVisual()));
+
+        public bool IsSelected
+        {
+            get { return (bool)GetValue(IsSelectedProperty); }
+            set { SetValue(IsSelectedProperty, value); }
+        }
+
         protected override void OnRender(DrawingContext drawingContext)
         {
             drawingContext.DrawRectangle(Fill, Pen, new Rect(RenderSize));
-            if ( IsFocused )
+            if ( IsFocused || IsSelected )
             {
                 drawingContext.DrawRectangle(FillFocus, null, new Rect(new Point(2, 2), new Size(RenderSize.Width-4, RenderSize.Height-4)));
             }
@@ -54,6 +66,7 @@ namespace GameRealisticMap.Studio.Controls
             }
 
             Focus();
+            IsSelected = true;
 
             start = e.GetPosition(map.ParentMap!);
             initialOffset = VisualTreeHelper.GetOffset(this);
