@@ -20,8 +20,8 @@
         <Image Source="pack://application:,,,/GameRealisticMap.Studio;component/Resources/Icons/grms256.png" Width="128" Height="128" Margin="5" />
 
         <StackPanel Grid.Column="1" Margin="5">
-            <TextBlock FontSize="30">GameRealisticMap Studio</TextBlock>
-            <TextBlock Margin="0 5 0 0">© Copyright 2021-2023 Julien Etelain (aka GrueArbre). All rights reserved.<LineBreak/>Licensed under MIT license terms.</TextBlock>
+            <TextBlock FontSize="30" Text="Arma Procedural Map Generator"/>
+            <TextBlock Margin="0 5 0 0"><Run Text="© Copyright 2021-2023 Julien Etelain (aka GrueArbre). All rights reserved."/><LineBreak/><Run Text="© Copyright 2024-2025 Arsen "/><Run Language="sr-latn-rs" Text="Đurđev (aka Krupanjac). All rights reserved."/><LineBreak/><Run Text="Licensed under MIT license terms."/></TextBlock>
             <TextBlock Margin="0 5 0 0" Text="{Binding Version}" />
         </StackPanel>
 
